@@ -103,6 +103,7 @@ class Api {
               .then((value) => passwordController.clear());
         } else {
           print('login result is false');
+          Toast.show('Такого пользователя не существует', context, gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
           Navigator.pop(dialogContext);
         }
       } on SocketException catch (e) {
