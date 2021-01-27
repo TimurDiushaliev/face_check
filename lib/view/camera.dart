@@ -9,11 +9,6 @@ class CameraPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List dataInTheBox = [
-      Api.box.get('username'),
-      Api.box.get('password'),
-      Api.box.get('token')
-    ];
     List keys = ['username', 'password', 'token'];
     return MaterialApp(
       home: Scaffold(
@@ -29,11 +24,6 @@ class CameraPage extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => LoginPage()),
                       (route) => false);
                 }),
-            IconButton(
-                icon: Icon(Icons.check_sharp),
-                onPressed: () {
-                  print('data in the box $dataInTheBox');
-                })
           ],
         ),
         body: Center(
