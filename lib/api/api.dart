@@ -99,23 +99,30 @@ class Api {
           box.put('token', token);
           Navigator.push(context,
                   MaterialPageRoute(builder: (context) => CameraPage()))
-              .then((value) => Navigator.pop(dialogContext)).then((value) => passwordController.clear());
+              .then((value) => Navigator.pop(dialogContext))
+              .then((value) => passwordController.clear());
         } else {
           print('login result is false');
           Navigator.pop(dialogContext);
         }
       } on SocketException catch (e) {
         print('Socket exception $e');
+        Toast.show('Связь с сервером потеряна, повторите снова', context,
+            gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
         Navigator.pop(dialogContext);
       } on TimeoutException catch (e) {
         print('Timeout exception $e');
+        Toast.show('Связь с сервером потеряна, повторите снова', context,
+            gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
         Navigator.pop(dialogContext);
       } on Error catch (e) {
         print('General error $e');
+        Toast.show('Связь с сервером потеряна, повторите снова', context,
+            gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
         Navigator.pop(dialogContext);
       }
     } else {
-      print('fields are empty');
+      Toast.show('Поля не должны быть пустыми', context, gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       Navigator.pop(dialogContext);
     }
   }

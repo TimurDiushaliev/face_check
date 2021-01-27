@@ -17,10 +17,9 @@ void main() async {
 }
 
 TextEditingController passwordController = TextEditingController();
+TextEditingController nameController = TextEditingController();
 
 class LoginPage extends StatelessWidget {
-  TextEditingController nameController = TextEditingController();
-
   final api = Api();
 
   @override

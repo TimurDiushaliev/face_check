@@ -23,6 +23,7 @@ class CameraPage extends StatelessWidget {
                 icon: Icon(Icons.exit_to_app),
                 onPressed: () {
                   Api.box.deleteAll(keys);
+                  passwordController.clear();
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => LoginPage()),
