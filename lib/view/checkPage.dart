@@ -1,9 +1,11 @@
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:facecheck/models/profile_model.dart';
 import 'package:facecheck/view/incoming_outcoming.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 
 import '../api/api.dart';
 import 'done.dart';
@@ -14,7 +16,7 @@ class CheckPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('1 $profile');
+    final api = Api();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -28,14 +30,12 @@ class CheckPage extends StatelessWidget {
         child: Icon(Icons.check),
         onPressed: () async {
           try {
-            Api.getRequest(context, profile.id).then((response) {
+            api.getRequest(context, profile.id).then((response) {
               if (response.statusCode == 200) {
                 var body = json.decode(response.body);
                 print('response body $body');
                 if (body['value'] != false) {
-                  print('fsd');
-                  Api.postRequest(context, body, profile.id).then((response)  {
-                    print('fsdaww');
+                  api.postRequest(context, body, profile.id).then((response)  {
                     if(response.statusCode == 200) {
                       print('${body['value']} completed');
                       Navigator.push(context, MaterialPageRoute(builder: (context)=> SuccesPage(succesResult: body['value'],)));
@@ -48,7 +48,11 @@ class CheckPage extends StatelessWidget {
                 }
               }
             });
-          } catch (e) {
+          } on SocketException catch(e){
+            print('Socket exception $e');
+            Toast.show('Связь с сервером прервана, проверьте интренет подключение', context, gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+          }
+          catch (e) {
             print('Exception $e');
           }
         },

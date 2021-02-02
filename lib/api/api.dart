@@ -14,7 +14,7 @@ import 'package:async/async.dart';
 
 class Api {
   BuildContext dialogContext;
-  static String baseUrl = 'http://192.168.88.233:8000/api/';
+  static String baseUrl = 'http://188.225.73.135/api/';
   static Map<String, String> headers = {
     'Content-type': 'application/json; charset=Utf-8'
   };
@@ -38,44 +38,57 @@ class Api {
         });
   }
 
-  static Future<http.Response> getRequest(context, id) async {
+  Future<http.Response> getRequest(context, id) async {
     try {
+      showAlertDialog(context);
       final apiUrl = baseUrl + 'timecontrol/$id/';
       final response = await http.get(apiUrl, headers: headers);
       print('get response ${json.decode(response.body)}');
+      Navigator.pop(dialogContext);
       return response;
     } on TimeoutException catch (e) {
+      Navigator.pop(dialogContext);
       Toast.show(
           'Вышло время ожидания, проверьте интернет подключение', context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       print('Timeout Error: $e');
     } on SocketException catch (e) {
+      Navigator.pop(dialogContext);
       Toast.show(
           'Связь с сервером прервана, проверьте интернет подключение', context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       print('Socket Error: $e');
-    } on Error catch (e) {
+    } catch (e) {
+      Navigator.pop(dialogContext);
       print('General Error: $e');
     }
   }
 
-  static Future<http.Response> postRequest(context, body, id) async {
+  Future<http.Response> postRequest(context, body, id) async {
     try {
+      showAlertDialog(context);
       final apiUrl = baseUrl + 'timecontrol/$id/';
       final response =
           await http.post(apiUrl, headers: headers, body: json.encode(body));
+      Navigator.pop(dialogContext);
       return response;
     } on TimeoutException catch (e) {
+      Navigator.pop(dialogContext);
       Toast.show(
           'Вышло время ожидания, проверьте интернет подключение', context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       print('Timeout Error: $e');
     } on SocketException catch (e) {
+      Navigator.pop(dialogContext);
       Toast.show(
           'Связь с сервером прервана, проверьте интернет подключение', context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       print('Socket Error: $e');
-    } on Error catch (e) {
+    } catch (e) {
+      Navigator.pop(dialogContext);
+      Toast.show(
+          'Произошла ошибка, попробуйте снова через некоторое время', context,
+          gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       print('General Error: $e');
     }
   }
@@ -103,7 +116,8 @@ class Api {
               .then((value) => passwordController.clear());
         } else {
           print('login result is false');
-          Toast.show('Такого пользователя не существует', context, gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+          Toast.show('Такого пользователя не существует', context,
+              gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
           Navigator.pop(dialogContext);
         }
       } on SocketException catch (e) {
@@ -113,55 +127,68 @@ class Api {
         Navigator.pop(dialogContext);
       } on TimeoutException catch (e) {
         print('Timeout exception $e');
-        Toast.show('Связь с сервером потеряна, повторите снова', context,
+        Toast.show('Вышло время ожидания, повторите снова', context,
             gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
         Navigator.pop(dialogContext);
-      } on Error catch (e) {
+      } catch (e) {
         print('General error $e');
-        Toast.show('Связь с сервером потеряна, повторите снова', context,
-            gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
         Navigator.pop(dialogContext);
+        Toast.show(
+            'Произошла ошибка, попробуйте снова через некоторое время', context,
+            gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       }
     } else {
-      Toast.show('Поля не должны быть пустыми', context, gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+      Toast.show('Поля не должны быть пустыми', context,
+          gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       Navigator.pop(dialogContext);
     }
   }
 
   static upload(File imageFile, context) async {
-    // open a bytestream
-    print('1');
-    var stream =
-        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-    // get file length
-    print('2');
-    var length = await imageFile.length();
-    print('3');
-    // string to uri
-    var uri = Uri.parse(baseUrl + 'image/compare/');
-    print('4');
-    // create multipart request
-    var request = new http.MultipartRequest("POST", uri);
-    print('5');
-    // multipart that takes file
-    var multipartFile = new http.MultipartFile('file', stream, length,
-        filename: basename(imageFile.path));
-    print('6');
-    // add file to multipart
-    request.files.add(multipartFile);
-    request.headers.addAll(headers);
-    print('7');
-    // send
-    var streamedResponse = await request.send();
-    var response = await http.Response.fromStream(streamedResponse);
-    print('respnse ${json.decode(response.body)}');
-    if (response.statusCode == 200) {
-      ProfileModel profileModel =
-          ProfileModel.fromJson(json.decode(response.body));
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CheckPage(profile: profileModel)));
+    try {
+      // open a bytestream
+      var stream =
+          new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+      // get file length
+      var length = await imageFile.length();
+      // string to uri
+      var uri = Uri.parse(baseUrl + 'image/compare/');
+      // create multipart request
+      var request = new http.MultipartRequest("POST", uri);
+
+      // multipart that takes file
+      var multipartFile = new http.MultipartFile('file', stream, length,
+          filename: basename(imageFile.path));
+
+      // add file to multipart
+      request.files.add(multipartFile);
+      request.headers.addAll(headers);
+
+      // send
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      print('respnse ${json.decode(response.body)}');
+      if (response.statusCode == 200) {
+        ProfileModel profileModel =
+            ProfileModel.fromJson(json.decode(response.body));
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CheckPage(profile: profileModel)));
+      }
+    } on SocketException catch (e) {
+      print('Socket exception $e');
+      Toast.show('Связь с сервером потеряна, повторите снова', context,
+          gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+    } on TimeoutException catch (e) {
+      print('Timeout exception $e');
+      Toast.show('Вышло время ожидания, повторите снова', context,
+          gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+    } catch (e) {
+      print('General error $e');
+      Toast.show(
+          'Произошла ошибка, попробуйте снова через некоторое время', context,
+          gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
     }
   }
 }
