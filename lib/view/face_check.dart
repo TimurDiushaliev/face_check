@@ -15,9 +15,7 @@ class _FaceCheckPageState extends State<FaceCheckPage> {
   @override
   void initState() {
     super.initState();
-    getImage().then((value) {
-      print('value $value');
-    });
+    getImage();
   }
 
   @override

@@ -55,12 +55,16 @@ class Api {
       print('Timeout Error: $e');
     } on SocketException catch (e) {
       Navigator.pop(dialogContext);
+      Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ErrorPage()));
       Toast.show(
           'Связь с сервером прервана, проверьте интернет подключение', context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       print('Socket Error: $e');
     } catch (e) {
       Navigator.pop(dialogContext);
+      Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ErrorPage()));
       print('General Error: $e');
     }
   }
@@ -75,18 +79,24 @@ class Api {
       return response;
     } on TimeoutException catch (e) {
       Navigator.pop(dialogContext);
+      Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ErrorPage()));
       Toast.show(
           'Вышло время ожидания, проверьте интернет подключение', context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       print('Timeout Error: $e');
     } on SocketException catch (e) {
       Navigator.pop(dialogContext);
+      Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ErrorPage()));
       Toast.show(
           'Связь с сервером прервана, проверьте интернет подключение', context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       print('Socket Error: $e');
     } catch (e) {
       Navigator.pop(dialogContext);
+      Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ErrorPage()));
       Toast.show(
           'Произошла ошибка, попробуйте снова через некоторое время', context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
@@ -181,14 +191,20 @@ class Api {
             context, MaterialPageRoute(builder: (context) => ErrorPage()));
       }
     } on SocketException catch (e) {
+      Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ErrorPage()));
       print('Socket exception $e');
       Toast.show('Связь с сервером потеряна, повторите снова', context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
     } on TimeoutException catch (e) {
+      Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ErrorPage()));
       print('Timeout exception $e');
       Toast.show('Вышло время ожидания, повторите снова', context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
     } catch (e) {
+      Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ErrorPage()));
       print('General error $e');
       Toast.show(
           'Произошла ошибка, попробуйте снова через некоторое время', context,
