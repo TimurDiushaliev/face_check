@@ -5,6 +5,7 @@ import 'package:facecheck/main.dart';
 import 'package:facecheck/models/profile_model.dart';
 import 'package:facecheck/view/camera.dart';
 import 'package:facecheck/view/checkPage.dart';
+import 'package:facecheck/view/error.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -175,6 +176,9 @@ class Api {
             context,
             MaterialPageRoute(
                 builder: (context) => CheckPage(profile: profileModel)));
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ErrorPage()));
       }
     } on SocketException catch (e) {
       print('Socket exception $e');

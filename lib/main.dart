@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:facecheck/view/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -13,7 +14,8 @@ void main() async {
   Directory document = await getApplicationDocumentsDirectory();
   await Hive.init(document.path);
   await Hive.openBox('myBox');
-  runApp(MaterialApp(home: LoginPage()));
+  runApp(MaterialApp(
+      home: Api.box.get('token') == null ? LoginPage() : CameraPage()));
 }
 
 TextEditingController passwordController = TextEditingController();
