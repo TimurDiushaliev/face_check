@@ -15,15 +15,29 @@ void main() async {
   await Hive.init(document.path);
   await Hive.openBox('myBox');
   runApp(MaterialApp(
-      home: Api.box.get('token') == null ? LoginPage() : CameraPage()));
+      home: MyApp()));
 }
 
 TextEditingController passwordController = TextEditingController();
 TextEditingController nameController = TextEditingController();
 
+class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var token = Api.box?.get('token');
+    if(token == null){
+      return LoginPage();
+    } else {
+      Api.headers['Authorization'] = 'Token $token';
+      return CameraPage();
+    }
+  }
+}
+
 class LoginPage extends StatelessWidget {
   final api = Api();
-
   @override
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height -
